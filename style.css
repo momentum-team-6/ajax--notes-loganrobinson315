@@ -49,3 +49,58 @@ body {
 h3 {
     right:50px;
 }
+
+
+ul {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-content: space-between;
+}
+
+li {
+    border: solid;
+    padding: 50px;
+    background-color: white;
+    color: black;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.update {
+   
+    background: #222;
+    height: 20px;
+    min-width: 55px;
+    border: none;
+    border-radius: 5px;
+    color: #eee;
+    font-size: 10px;
+    position: relative;
+    transition: 1s;
+    -webkit-tap-highlight-color: transparent;
+    justify-content: center;
+    cursor: pointer;
+    padding-top: 2px;
+    align-items: center;
+}
+
+.delete {
+    
+    background: #222;
+    height: 20px;
+    min-width: 55px;
+    border: none;
+    border-radius: 5px;
+    color: #eee;
+    font-size: 10px;
+    position: relative;
+    transition: 1s;
+    -webkit-tap-highlight-color: transparent;
+    justify-content: center;
+    cursor: pointer;
+    padding-top: 2px;
+    align-items: center;
+   
+
+}

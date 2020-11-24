@@ -21,9 +21,17 @@ fetch(url)
 form.addEventListener('submit', function (event) {
     event.preventDefault()
     const newNote = document.querySelector('#note-text').value
-    createNote(newNote)
-
-})
+    console.log(event.target.classList)
+    if (event.target.classList.contains('update')){
+        console.log('in submit.update-note')
+        updateNote(noteText.value)
+        
+    } else {
+        console.log('in submit.create-note')
+        createNote(newNote)
+    }
+    
+ })
 //----------this responds to my submit button----------//
 
 
@@ -41,7 +49,7 @@ function createNote(newNote) {
         .then(res => res.json())
         .then(data => {
             renderNoteItem(data)
-            // createDeleteButton(deleteButton)
+            
 
         })
 }
@@ -51,33 +59,44 @@ function createNote(newNote) {
 //---------this puts my data(note) in a list on my page-----------//
 function renderNoteItem(noteObj) {
     const noteEl = document.createElement('li')
-    noteEl.innerText = noteObj.item
+    noteEl.innerHTML = `<div id="note-${noteObj.id}-text">${noteObj.item}</div>`
+    noteEl.id = noteObj.id
     noteList.appendChild(noteEl)
+    const deleteButton = document.createElement('button')
+    deleteButton.innerText = 'delete'
+    noteEl.appendChild(deleteButton)
+    deleteButton.classList.add('delete')
+    const updateButton = document.createElement('button')
+    updateButton.innerText = 'update'
+    noteEl.appendChild(updateButton)
+    updateButton.classList.add('update')
 }
 //---------this puts my data(note) in a list on my page----------//
 
 
 //---------Adds delete button to elements----------//
 
-todoList.addEventListener('click', function (event) {
+noteList.addEventListener('click', function (event) {
     if (event.target.classList.contains('delete')) {
-      deleteNote(event,target)
+      deleteNote(event.target)
     }
 
 
 
 
-function createDeleteButton(element) {
-    const deleteButton = document.createElement('button')
-    deleteButton.innerText = 'delete'
-    noteList.appendChild(deleteButton)
+// function createDeleteButton(element) {
+//     const deleteButton = document.createElement('button')
+//     deleteButton.innerText = 'delete'
+//     noteList.appendChild(deleteButton)
     
-  }
+//   }
 
 
-function deleteNote(id) {
-    console.log(eventTarget.parentElement)
-    const noteId = eventTarget.parentElement.id
+function deleteNote(element) {
+    console.log(element)
+    console.log(element.parentElement)
+    const noteId = element.parentElement.id
+    
 
 
     fetch(`http://localhost:3000/notes/${noteId}`, {
@@ -89,8 +108,57 @@ function deleteNote(id) {
         .then(function (data) {
             console.log(data)
         })
-
+        document.location.reload()
 }
 })
 
 
+//---------Update note function---------//
+
+noteList.addEventListener('click', function (event) {
+    if (event.target.classList.contains('update')) {
+      updateNote(event.target)
+    }
+})
+
+function updateNote(element) {
+    
+    console.log(element)
+    console.log(element.parentElement.innerText)
+    const noteId = element.parentElement.id
+    const noteText = document.querySelector(`#note-${noteId}-text`).innerText
+    console.log(noteText)
+    const saveButton = document.querySelector("#save-note")
+    saveButton.classList.add("update")
+    
+    document.querySelector('#note-text').value = noteText
+    // const note
+
+    fetch(`http://localhost:3000/notes/${noteId}` , {
+        method: 'PATCH' ,
+        body: JSON.stringify({
+            item: noteText.value
+        })
+        
+    })
+    .then(function (res) {
+        return res.json()
+     })
+     .then(function(data){
+         console.log(data)
+        
+    
+    //     updateButton.classList.add('update')
+    // }
+        //   
+         // reset the saveButton not to have the update class
+        saveButton.classList.remove("update")
+     })
+    }
+
+    noteList.addEventListener('edit', function (event) {
+        console.log('in update')
+        if (event.target.classList.contains('edit')) {
+          updateNote(event.target)
+        }
+    })
